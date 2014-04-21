@@ -683,7 +683,6 @@ a-list
 (parse '(if a b c))
 (parse '(let [x 1] x))
 
-
 ;; Scoping
 ;; ============================================================================
 
@@ -877,6 +876,14 @@ some-x
 
 (map #(* % %) (filter even? (range 20)))
 
+;; when a map is passed to filter, pred is called with key/value
+;; pairs (http://clojuredocs.org/clojure_core/clojure.core/filter)
+(filter #(> (second %) 100) {:a 105 :b 3})
+
+;; at the REPL (not in LightTable)
+;; *1 contains the result of prev expr
+(into {} *1)
+
 (reduce + (range 100))
 
 
@@ -901,6 +908,26 @@ some-x
       y (range 1 10)
       :let [prod (* x y)]]
   [x y prod])
+
+;;
+(for [x (range 3)
+      y (range 3)
+      :while (not= x y)]
+  [x y])
+
+;; for modifiers are :let, :when and :while.
+;; each binding-form/coll-expr can have zero or more modifiers
+
+;; in the following form, the :while modifier applies to the 'y' range
+(for [x (range 3)
+      y (range 3)
+      :while (not= x y)]
+  [x y])
+
+(for [x (range 3) :when (> x 1)
+      y (range 3)
+      :while (not= x y)]
+  [x y])
 
 
 ;; Seqable collections
